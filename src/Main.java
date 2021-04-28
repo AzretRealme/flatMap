@@ -1,4 +1,7 @@
+import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
+
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -21,6 +24,9 @@ public class Main {
 
         List<String> getCoachingStaff = clubs.stream()
                 .map(Club::getCoachingStaff)
+                .peek(System.out::println)
+                .skip(1)
+                .limit(0)
                  .flatMap(Collection::stream)
                 .collect(Collectors.toList());
         System.out.println(getCoachingStaff);
@@ -61,23 +67,55 @@ championsLigue.forEach(System.out::println);
                 .limit(2)
                 .forEach(s->System.out.println(s));
 
-        Collection<String> list = Arrays.asList("A", "B", "C", "D", "A", "B", "C");
+        System.out.println("------------------------------------------");
+
+        List<Club> clubs44 = Arrays.asList(
+                (new Club("ManchesterUnited", 1878, Country.ENGLAND, Ligue.PremierLigue,
+                        Arrays.asList("Ole Gunnar", "Ole Gunnar", "Ole Gunnar", "karla"))),
+                new Club("RealMadrid", 1902, Country.SPAIN, Ligue.LaLiga,
+                        Arrays.asList("Zidane", "Zidane", "Zidane", "karla")),
+                new Club("Lion", 1950, Country.FRANCE, Ligue.Ligue1,
+                        Arrays.asList("Rudi Garcia", "karla", "karla", "karla"))
+        );
+        //"A", "B", "C", "D", "A", "B", "C"
 
 // Get collection without duplicate i.e. distinct only
-        List<String> distinctElements = list.stream()
+        List<String > distinctElements = clubs44.stream()
+                .map(Club::getCoachingStaff)
+                .flatMap(Collection::stream)
                 .distinct()
                 .collect(Collectors.toList());
-
-//Let's verify distinct elements
         System.out.println(distinctElements);
-        List<Integer> list2 = Arrays.asList(1, 2, 3, 4, 5);
 
-        List<Integer> newList = list2.stream()
+        System.out.println("------------------------------------------");
+//Let's verify distinct elements
+        List<Club> clubs445 = Arrays.asList(
+                (new Club("ManchesterUnited", 1878, Country.ENGLAND, Ligue.PremierLigue,
+                        Arrays.asList("Ole Gunnar", "Ole Gunnar", "Ole Gunnar", "karla"))),
+                new Club("RealMadrid", 1902, Country.SPAIN, Ligue.LaLiga,
+                        Arrays.asList("Zidane", "Zidane", "Zidane", "karla")),
+                new Club("Lion", 1950, Country.FRANCE, Ligue.Ligue1,
+                        Arrays.asList("Rudi Garcia", "karla", "karla", "karla"))
+        );
+
+        List<String> newList = clubs445.stream()
+                .map(Club::getCoachingStaff)
+                .flatMap(Collection::stream)
                 .peek(System.out::println)
                 .collect(Collectors.toList());
 
         System.out.println(newList);
-        List<String> list3 = Arrays.asList("9", "A", "Z", "1", "B", "Y", "4", "a", "c");
+
+        System.out.println("------------------------------------------");
+
+        List<Club> clubsNo = Arrays.asList(
+                (new Club("ManchesterUnited", 1878, Country.ENGLAND, Ligue.PremierLigue,
+                        Arrays.asList("Ole Gunnar", "Ole Gunnar", "Ole Gunnar", "karla"))),
+                new Club("RealMadrid", 1902, Country.SPAIN, Ligue.LaLiga,
+                        Arrays.asList("Zidane", "Zidane", "Zidane", "karla")),
+                new Club("Lion", 1950, Country.FRANCE, Ligue.Ligue1,
+                        Arrays.asList("Rudi Garcia", "karla", "karla", "karla"))
+        );
 
         /*
         List<String> sortedList = list.stream()
@@ -85,11 +123,26 @@ championsLigue.forEach(System.out::println);
             .collect(Collectors.toList());
         */
 
-        List<String> sortedList = list3.stream()
+        List<String> sortedList = clubsNo.stream()
+                .map(Club::getCoachingStaff)
+                .flatMap(Collection::stream)
                 .sorted(Comparator.reverseOrder())
                 .collect(Collectors.toList());
 
         sortedList.forEach(System.out::println);
+
+        System.out.println("------------------------------------");
+
+        Predicate<ChampionsLigue> p1 = s -> s.getName().startsWith("S");
+        Predicate<ChampionsLigue> p2 = s -> s.getPrice() == 28000000 && s.getName().startsWith("Z");
+        List<ChampionsLigue> list = ChampionsLigue.getChampionsLigue();
+
+        boolean b3 = list.stream().anyMatch(p1);
+        System.out.println(b3);
+        boolean b4 = list.stream().anyMatch(p2);
+        System.out.println(b4);
+
+        System.out.println("------------------------------------------------");
 
         long count = Stream.of("how","to","do","in","java")
                 .count();
@@ -98,6 +151,8 @@ championsLigue.forEach(System.out::println);
         count = IntStream.of(1,2,3,4,5,6,7,8,9)
                 .count();
         System.out.printf("There are %d integers in the stream %n", count);
+
+
 
         List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
 
@@ -128,9 +183,9 @@ championsLigue.forEach(System.out::println);
                 .filter(s -> s.startsWith("D")).findFirst();
         Optional<String> fidnAny = lst2.parallelStream()
                 .filter(s -> s.startsWith("J")).findAny();
-
         System.out.println(findFirst.get()); //Always print David
         System.out.println(fidnAny.get()); //Print Jack/Jill/Julia :behavior of this operation is explicitly nondeterminist
+
 
         //getting max number
         Integer maxNum = Stream.of(10, 13, 4, 9, 2, 100)
